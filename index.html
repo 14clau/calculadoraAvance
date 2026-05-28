@@ -4,18 +4,35 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>✨ Calculadora de Avance para Celia</title>
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+:root {
+  --page-bg: linear-gradient(145deg, #ffecd2 0%, #fcb69f 35%, #e8c5e5 70%, #c3b1e1 100%);
+  --accent: #ff6b6b;
+  --accent2: #ffb347;
+  --accent3: #c3b1e1;
+  --accent-rgb: 255, 107, 107;
+  --card-shadow: rgba(200, 90, 80, 0.22);
+  --blob1: rgba(255, 183, 77, 0.18);
+  --blob2: rgba(195, 177, 225, 0.22);
+  --formula-bg: linear-gradient(135deg, #fff9f0 0%, #fff0f5 100%);
+  --formula-border: rgba(255, 107, 107, 0.12);
+  --formula-label: #d4a0a0;
+  --ring-shadow: rgba(255, 107, 107, 0.28);
+  --success: #2ecc71;
+}
+
 body {
   min-height: 100vh;
-  background: linear-gradient(145deg, #ffecd2 0%, #fcb69f 35%, #e8c5e5 70%, #c3b1e1 100%);
+  background: var(--page-bg);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Nunito', sans-serif;
   padding: 2rem;
+  transition: background 0.5s ease;
 }
 
 .card {
@@ -25,7 +42,7 @@ body {
   max-width: 540px;
   width: 100%;
   box-shadow:
-    0 40px 100px rgba(200,90,80,0.22),
+    0 40px 100px var(--card-shadow),
     0 0 0 1.5px rgba(255,255,255,0.7);
   position: relative;
   overflow: hidden;
@@ -36,26 +53,68 @@ body {
   position: absolute;
   top: -80px; right: -60px;
   width: 260px; height: 260px;
-  background: radial-gradient(circle, rgba(255,183,77,0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--blob1) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
+  transition: background 0.5s ease;
 }
 .card::after {
   content: '';
   position: absolute;
   bottom: -60px; left: -40px;
   width: 200px; height: 200px;
-  background: radial-gradient(circle, rgba(195,177,225,0.22) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--blob2) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
+  transition: background 0.5s ease;
 }
 
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.6rem;
+  background: #f5f5f5;
+  border-radius: 16px;
+  padding: 0.35rem;
+  position: relative;
+  z-index: 1;
+}
+.tab-btn {
+  flex: 1;
+  border: none;
+  border-radius: 13px;
+  padding: 0.65rem 0.5rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #aaa;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.tab-btn:hover { color: #777; }
+.tab-btn.active {
+  background: #fff;
+  color: var(--accent);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+.tab-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.tab-panel { display: none; position: relative; z-index: 1; }
+.tab-panel.active { display: block; }
+
 h1 {
-  font-family: 'Pacifico', cursive;
-  font-size: 2rem;
-  color: #ff6b6b;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: var(--accent);
   text-align: center;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  transition: color 0.4s ease;
 }
 
 .subtitle {
@@ -79,14 +138,14 @@ h1 {
 .ring-svg {
   transform: rotate(-90deg);
   transition: filter 0.5s ease;
-  filter: drop-shadow(0 6px 24px rgba(255,107,107,0.28));
+  filter: drop-shadow(0 6px 24px var(--ring-shadow));
 }
 
 .ring-bg { fill: none; stroke: #f2f2f2; stroke-width: 16; }
 
 .ring-progress {
   fill: none;
-  stroke: #ff6b6b;
+  stroke: var(--accent);
   stroke-width: 16;
   stroke-linecap: round;
   stroke-dasharray: 565.5;
@@ -106,7 +165,7 @@ h1 {
 .pct-num {
   font-size: 3.2rem;
   font-weight: 900;
-  color: #ff6b6b;
+  color: var(--accent);
   line-height: 1;
   transition: color 0.5s ease;
   font-family: 'Nunito', sans-serif;
@@ -155,8 +214,8 @@ h1 {
 }
 .input-group input::-webkit-inner-spin-button { display: none; }
 .input-group input:focus {
-  border-color: #ff6b6b;
-  box-shadow: 0 0 0 5px rgba(255,107,107,0.1);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 5px rgba(var(--accent-rgb), 0.1);
   background: #fff;
 }
 
@@ -172,7 +231,7 @@ h1 {
 .bar-fill {
   height: 100%;
   border-radius: 100px;
-  background: linear-gradient(90deg, #ff6b6b, #ffb347);
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
   width: 0%;
   transition: width 0.65s cubic-bezier(0.4,0,0.2,1), background 0.5s;
   position: relative;
@@ -184,7 +243,7 @@ h1 {
   width: 10px; height: 10px;
   border-radius: 50%;
   background: inherit;
-  box-shadow: 0 0 0 4px rgba(255,107,107,0.2);
+  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.2);
   transition: opacity 0.3s;
   opacity: 0;
 }
@@ -204,27 +263,30 @@ h1 {
 
 /* ── FORMULA ── */
 .formula-box {
-  background: linear-gradient(135deg, #fff9f0 0%, #fff0f5 100%);
+  background: var(--formula-bg);
   border-radius: 20px;
   padding: 1.1rem 1.4rem;
-  border: 1.5px solid rgba(255,107,107,0.12);
+  border: 1.5px solid var(--formula-border);
   margin-bottom: 1.2rem;
   text-align: center;
+  transition: background 0.4s ease, border-color 0.4s ease;
 }
 .formula-label {
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #d4a0a0;
+  color: var(--formula-label);
   margin-bottom: 0.4rem;
+  transition: color 0.4s ease;
 }
 .formula-eq {
   font-size: 1rem;
   font-weight: 800;
-  color: #ff6b6b;
+  color: var(--accent);
+  transition: color 0.4s ease;
 }
-.formula-eq span { color: #ffb347; }
+.formula-eq span { color: var(--accent2); transition: color 0.4s ease; }
 
 /* ── RESULT TABLE ── */
 .result-card {
@@ -244,7 +306,7 @@ h1 {
 .result-row + .result-row { border-top: 1px dashed #efefef; }
 .result-row .lbl { color: #aaa; font-weight: 700; }
 .result-row .val { font-weight: 900; color: #333; font-size: 0.95rem; }
-.result-row.highlight .val { color: #ff6b6b; font-size: 1.1rem; }
+.result-row.highlight .val { color: var(--accent); font-size: 1.1rem; transition: color 0.4s ease; }
 
 /* ── CONFETTI CANVAS ── */
 #ccc {
@@ -280,6 +342,90 @@ h1 {
   100% { transform: scale(1); }
 }
 .pop { animation: pop 0.4s ease; }
+
+/* ── RESET ── */
+.btn-reset {
+  display: block;
+  width: 100%;
+  margin-top: 1.4rem;
+  padding: 0.85rem 1.2rem;
+  border: none;
+  border-radius: 18px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #888;
+  background: #f5f5f5;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+.btn-reset:hover {
+  background: #eee;
+  color: #666;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+.btn-reset:active {
+  transform: scale(0.98);
+}
+.btn-reset:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ── THEMES PANEL ── */
+.theme-intro {
+  text-align: center;
+  color: #999;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1.4rem;
+  line-height: 1.45;
+}
+.theme-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+.theme-option {
+  border: 2.5px solid #eee;
+  border-radius: 20px;
+  padding: 1rem;
+  cursor: pointer;
+  background: #fafafa;
+  text-align: left;
+  font-family: 'Nunito', sans-serif;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.theme-option:hover {
+  border-color: #ddd;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+}
+.theme-option.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.12);
+  background: #fff;
+}
+.theme-option:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.theme-swatch {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 0.55rem;
+}
+.theme-swatch span {
+  flex: 1;
+  height: 28px;
+  border-radius: 8px;
+}
+.theme-name {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #444;
+}
+.theme-option.selected .theme-name { color: var(--accent); }
 </style>
 </head>
 <body>
@@ -290,8 +436,14 @@ h1 {
   <div class="emoji-badge">🌸</div>
   <div class="emoji-badge2">⭐</div>
 
+  <nav class="tabs" role="tablist" aria-label="Secciones">
+    <button type="button" class="tab-btn active" role="tab" id="tabCalc" aria-selected="true" aria-controls="panelCalc" data-tab="calc">📊 Calculadora</button>
+    <button type="button" class="tab-btn" role="tab" id="tabTheme" aria-selected="false" aria-controls="panelTheme" data-tab="theme">🎨 Personalización</button>
+  </nav>
+
+  <div class="tab-panel active" id="panelCalc" role="tabpanel" aria-labelledby="tabCalc">
   <h1>% de Avance</h1>
-  <p class="subtitle">Calculá cuánto has avanzado</p>
+  <p class="subtitle">Calcula cuánto has avanzado en tus apuntes :D</p>
 
   <!-- Ring -->
   <div class="ring-container">
@@ -330,7 +482,7 @@ h1 {
   </div>
 
   <!-- Status -->
-  <div class="status-box" id="st">Ingresá los valores para calcular 💫</div>
+  <div class="status-box" id="st">Ingresa los valores para calcular 💫</div>
 
   <!-- Formula -->
   <div class="formula-box">
@@ -359,6 +511,17 @@ h1 {
       <span class="val" id="tr">—</span>
     </div>
   </div>
+
+  <button type="button" class="btn-reset" id="btnReset" aria-label="Reiniciar valores ingresados">
+    ↺ Reiniciar valores
+  </button>
+  </div>
+
+  <div class="tab-panel" id="panelTheme" role="tabpanel" aria-labelledby="tabTheme" hidden>
+    <h1>Personalización</h1>
+    <p class="theme-intro">Elige un tema de colores para la calculadora. Tu elección se guardará automáticamente.</p>
+    <div class="theme-grid" id="themeGrid"></div>
+  </div>
 </div>
 
 <script>
@@ -368,30 +531,207 @@ const pd = document.getElementById('pd');
 const bf = document.getElementById('bf');
 const st = document.getElementById('st');
 const rc = document.getElementById('rc');
+const rgStops = document.querySelectorAll('#rg stop');
 
 rp.style.strokeDasharray = CIRC;
 rp.style.strokeDashoffset = CIRC;
 
+const THEMES = [
+  {
+    id: 'atardecer',
+    name: 'Atardecer en Moraleja',
+    emoji: '🌅',
+    swatch: ['#ffecd2', '#fcb69f', '#e8c5e5', '#c3b1e1'],
+    pageBg: 'linear-gradient(145deg, #ffecd2 0%, #fcb69f 35%, #e8c5e5 70%, #c3b1e1 100%)',
+    accent: '#ff6b6b', accent2: '#ffb347', accent3: '#c3b1e1',
+    accentRgb: '255, 107, 107',
+    cardShadow: 'rgba(200, 90, 80, 0.22)',
+    blob1: 'rgba(255, 183, 77, 0.18)', blob2: 'rgba(195, 177, 225, 0.22)',
+    formulaBg: 'linear-gradient(135deg, #fff9f0 0%, #fff0f5 100%)',
+    formulaBorder: 'rgba(255, 107, 107, 0.12)', formulaLabel: '#d4a0a0',
+    ringShadow: 'rgba(255, 107, 107, 0.28)',
+    progress: ['#ff6b6b', '#ffb347', '#f9ca24', '#6bcff6'],
+    confetti: ['#ff6b6b','#ffb347','#c3b1e1','#a8e6cf','#f9ca24','#6bcff6','#ff9ff3','#ff6eb7']
+  },
+  {
+    id: 'oceano',
+    name: 'Casa en la playa',
+    emoji: '🌊',
+    swatch: ['#e0f7fa', '#80deea', '#4dd0e1', '#00838f'],
+    pageBg: 'linear-gradient(145deg, #e0f7fa 0%, #b2ebf2 35%, #80cbc4 70%, #4db6ac 100%)',
+    accent: '#00897b', accent2: '#26c6da', accent3: '#4dd0e1',
+    accentRgb: '0, 137, 123',
+    cardShadow: 'rgba(0, 105, 92, 0.2)',
+    blob1: 'rgba(38, 198, 218, 0.2)', blob2: 'rgba(77, 208, 225, 0.22)',
+    formulaBg: 'linear-gradient(135deg, #e0f7fa 0%, #e8f5e9 100%)',
+    formulaBorder: 'rgba(0, 137, 123, 0.15)', formulaLabel: '#80cbc4',
+    ringShadow: 'rgba(0, 137, 123, 0.28)',
+    progress: ['#00897b', '#26c6da', '#4dd0e1', '#80deea'],
+    confetti: ['#00897b','#26c6da','#4dd0e1','#80deea','#b2dfdb','#00acc1','#a7ffeb','#18ffff']
+  },
+  {
+    id: 'bosque',
+    name: 'Sierra de Gata',
+    emoji: '🌿',
+    swatch: ['#f1f8e9', '#aed581', '#7cb342', '#33691e'],
+    pageBg: 'linear-gradient(145deg, #f1f8e9 0%, #dcedc8 35%, #a5d6a7 70%, #81c784 100%)',
+    accent: '#558b2f', accent2: '#9ccc65', accent3: '#aed581',
+    accentRgb: '85, 139, 47',
+    cardShadow: 'rgba(56, 142, 60, 0.2)',
+    blob1: 'rgba(156, 204, 101, 0.22)', blob2: 'rgba(129, 199, 132, 0.25)',
+    formulaBg: 'linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%)',
+    formulaBorder: 'rgba(85, 139, 47, 0.15)', formulaLabel: '#a5d6a7',
+    ringShadow: 'rgba(85, 139, 47, 0.28)',
+    progress: ['#558b2f', '#7cb342', '#9ccc65', '#aed581'],
+    confetti: ['#558b2f','#7cb342','#9ccc65','#aed581','#c5e1a5','#33691e','#dce775','#f0f4c3']
+  },
+  {
+    id: 'lavanda',
+    name: 'Lavanda',
+    emoji: '💜',
+    swatch: ['#f3e5f5', '#ce93d8', '#ab47bc', '#6a1b9a'],
+    pageBg: 'linear-gradient(145deg, #f3e5f5 0%, #e1bee7 35%, #ce93d8 70%, #ba68c8 100%)',
+    accent: '#8e24aa', accent2: '#ba68c8', accent3: '#ce93d8',
+    accentRgb: '142, 36, 170',
+    cardShadow: 'rgba(106, 27, 154, 0.2)',
+    blob1: 'rgba(186, 104, 200, 0.22)', blob2: 'rgba(206, 147, 216, 0.25)',
+    formulaBg: 'linear-gradient(135deg, #fce4ec 0%, #f3e5f5 100%)',
+    formulaBorder: 'rgba(142, 36, 170, 0.15)', formulaLabel: '#ce93d8',
+    ringShadow: 'rgba(142, 36, 170, 0.28)',
+    progress: ['#8e24aa', '#ab47bc', '#ba68c8', '#ce93d8'],
+    confetti: ['#8e24aa','#ab47bc','#ba68c8','#ce93d8','#e1bee7','#6a1b9a','#f48fb1','#b39ddb']
+  },
+  {
+    id: 'cereza',
+    name: 'Celia Coqueta',
+    emoji: '🍒',
+    swatch: ['#fce4ec', '#f48fb1', '#ec407a', '#c2185b'],
+    pageBg: 'linear-gradient(145deg, #fce4ec 0%, #f8bbd9 35%, #f48fb1 70%, #f06292 100%)',
+    accent: '#e91e63', accent2: '#f48fb1', accent3: '#f8bbd9',
+    accentRgb: '233, 30, 99',
+    cardShadow: 'rgba(194, 24, 91, 0.2)',
+    blob1: 'rgba(244, 143, 177, 0.25)', blob2: 'rgba(248, 187, 217, 0.3)',
+    formulaBg: 'linear-gradient(135deg, #fff0f5 0%, #fce4ec 100%)',
+    formulaBorder: 'rgba(233, 30, 99, 0.15)', formulaLabel: '#f48fb1',
+    ringShadow: 'rgba(233, 30, 99, 0.28)',
+    progress: ['#e91e63', '#ec407a', '#f48fb1', '#f8bbd9'],
+    confetti: ['#e91e63','#ec407a','#f48fb1','#f8bbd9','#c2185b','#ff80ab','#ff4081','#ffeb3b']
+  },
+  {
+    id: 'noche',
+    name: 'Noche en Salamanca',
+    emoji: '🌙',
+    swatch: ['#1a1a2e', '#16213e', '#0f3460', '#533483'],
+    pageBg: 'linear-gradient(145deg, #1a1a2e 0%, #16213e 40%, #0f3460 75%, #533483 100%)',
+    accent: '#e94560', accent2: '#ff6b9d', accent3: '#a29bfe',
+    accentRgb: '233, 69, 96',
+    cardShadow: 'rgba(15, 52, 96, 0.45)',
+    blob1: 'rgba(233, 69, 96, 0.15)', blob2: 'rgba(162, 155, 254, 0.2)',
+    formulaBg: 'linear-gradient(135deg, #1f2940 0%, #2a1f3d 100%)',
+    formulaBorder: 'rgba(233, 69, 96, 0.2)', formulaLabel: '#a29bfe',
+    ringShadow: 'rgba(233, 69, 96, 0.35)',
+    progress: ['#e94560', '#ff6b9d', '#a29bfe', '#74b9ff'],
+    confetti: ['#e94560','#ff6b9d','#a29bfe','#74b9ff','#fd79a8','#ffeaa7','#55efc4','#dfe6e9']
+  }
+];
+
+let currentTheme = THEMES[0];
+let confettiCols = [...currentTheme.confetti];
+
+function applyTheme(theme) {
+  currentTheme = theme;
+  const r = document.documentElement;
+  r.style.setProperty('--page-bg', theme.pageBg);
+  r.style.setProperty('--accent', theme.accent);
+  r.style.setProperty('--accent2', theme.accent2);
+  r.style.setProperty('--accent3', theme.accent3);
+  r.style.setProperty('--accent-rgb', theme.accentRgb);
+  r.style.setProperty('--card-shadow', theme.cardShadow);
+  r.style.setProperty('--blob1', theme.blob1);
+  r.style.setProperty('--blob2', theme.blob2);
+  r.style.setProperty('--formula-bg', theme.formulaBg);
+  r.style.setProperty('--formula-border', theme.formulaBorder);
+  r.style.setProperty('--formula-label', theme.formulaLabel);
+  r.style.setProperty('--ring-shadow', theme.ringShadow);
+  if (rgStops.length >= 3) {
+    rgStops[0].setAttribute('stop-color', theme.accent);
+    rgStops[1].setAttribute('stop-color', theme.accent2);
+    rgStops[2].setAttribute('stop-color', theme.accent3);
+  }
+  confettiCols = [...theme.confetti];
+  document.querySelectorAll('.theme-option').forEach(el => {
+    el.classList.toggle('selected', el.dataset.themeId === theme.id);
+  });
+  try { localStorage.setItem('calcAvanceTheme', theme.id); } catch (_) {}
+  calc();
+}
+
+function initThemes() {
+  const grid = document.getElementById('themeGrid');
+  THEMES.forEach(t => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'theme-option';
+    btn.dataset.themeId = t.id;
+    btn.innerHTML = `
+      <div class="theme-swatch">${t.swatch.map(c => `<span style="background:${c}"></span>`).join('')}</div>
+      <div class="theme-name">${t.emoji} ${t.name}</div>`;
+    btn.addEventListener('click', () => applyTheme(t));
+    grid.appendChild(btn);
+  });
+  let saved = 'atardecer';
+  try { saved = localStorage.getItem('calcAvanceTheme') || saved; } catch (_) {}
+  const found = THEMES.find(t => t.id === saved) || THEMES[0];
+  applyTheme(found);
+}
+
+function switchTab(tabId) {
+  const isCalc = tabId === 'calc';
+  document.getElementById('tabCalc').classList.toggle('active', isCalc);
+  document.getElementById('tabTheme').classList.toggle('active', !isCalc);
+  document.getElementById('tabCalc').setAttribute('aria-selected', isCalc);
+  document.getElementById('tabTheme').setAttribute('aria-selected', !isCalc);
+  document.getElementById('panelCalc').classList.toggle('active', isCalc);
+  document.getElementById('panelTheme').classList.toggle('active', !isCalc);
+  document.getElementById('panelCalc').hidden = !isCalc;
+  document.getElementById('panelTheme').hidden = isCalc;
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
 const MSGS = [
   { max: 0,   text: 'Ingresa los valores para calcular ', color: '#ccc' },
-  { max: 10,  text: '¡Primer paso dado! 🌱',               color: '#ff6b6b' },
-  { max: 25,  text: '¡Empezando con fuerza! 💪',           color: '#ff8c6b' },
-  { max: 40,  text: '¡Buen ritmo, sigue adelante! 🚀',     color: '#ffb347' },
-  { max: 50,  text: '¡Ya vas por la mitad! 🌟',            color: '#f9ca24' },
-  { max: 65,  text: '¡Más de la mitad, genial! ✨',        color: '#a8e6cf' },
-  { max: 75,  text: '¡Tres cuartos del camino! 🔥',        color: '#6bcff6' },
-  { max: 90,  text: '¡Casi llegas, no pares ahora! ⚡',          color: '#c3b1e1' },
-  { max: 99,  text: '¡Falta poquísimo! ¡Ya casi! 💎',     color: '#ff9ff3' },
-  { max: 100, text: '¡META CUMPLIDA! 🎉🎊🏆',             color: '#2ecc71' },
-  { max: Infinity, text: '¡Has superado la meta! 🏆🌈',      color: '#2ecc71' },
+  { max: 10,  text: '¡Primer paso dado! 🌱' },
+  { max: 25,  text: '¡Empezando con fuerza! 💪' },
+  { max: 40,  text: '¡Buen ritmo, sigue adelante chocho! 🚀' },
+  { max: 50,  text: '¡Ya vas por la mitad! 🌟' },
+  { max: 65,  text: '¡Más de la mitad, genial! ✨' },
+  { max: 75,  text: '¡Tres cuartos del camino! 🔥' },
+  { max: 90,  text: '¡Casi llegas, no pares ahora! ⚡' },
+  { max: 99,  text: '¡Falta poquísimo! ¡Ya casi! 💎' },
+  { max: 100, text: '¡META CUMPLIDA! 🎉🎊🏆' },
+  { max: Infinity, text: '¡Has superado la meta! 🏆🌈' },
 ];
 
 function getColor(p) {
-  if (p <= 25)  return '#ff6b6b';
-  if (p <= 50)  return '#ffb347';
-  if (p <= 75)  return '#f9ca24';
-  if (p < 100)  return '#6bcff6';
+  const c = currentTheme.progress;
+  if (p <= 25)  return c[0];
+  if (p <= 50)  return c[1];
+  if (p <= 75)  return c[2];
+  if (p < 100)  return c[3];
   return '#2ecc71';
+}
+
+function getMsgColor(p) {
+  if (p <= 0) return '#ccc';
+  if (p >= 100) return '#2ecc71';
+  const c = currentTheme.progress;
+  if (p <= 25) return c[0];
+  if (p <= 50) return c[1];
+  if (p <= 75) return c[2];
+  return c[3];
 }
 
 function getMsg(p) {
@@ -415,7 +755,7 @@ function animTo(target) {
     const c = getColor(cur);
     pd.style.color = c;
     rp.style.stroke = c;
-    bf.style.background = `linear-gradient(90deg, #ff6b6b, ${c})`;
+    bf.style.background = `linear-gradient(90deg, ${currentTheme.accent}, ${c})`;
     bf.classList.toggle('show-dot', clamped > 2);
     if (t < 1) raf = requestAnimationFrame(step);
   }
@@ -430,7 +770,7 @@ function calc() {
 
   if (isNaN(vl) || isNaN(vt) || vt <= 0) {
     animTo(0);
-    st.textContent = (!isNaN(vt) && vt <= 0) ? 'El valor total debe ser mayor a 0 ⚠️' : 'Ingresá los valores para calcular 💫';
+    st.textContent = (!isNaN(vt) && vt <= 0) ? 'El valor total debe ser mayor a 0 ⚠️' : 'Ingresa los valores para calcular 💫';
     st.style.color = '#ccc';
     rc.style.display = 'none';
     confettiDone = false;
@@ -442,7 +782,7 @@ function calc() {
 
   const m = getMsg(Math.round(pct));
   st.textContent = m.text;
-  st.style.color = m.color;
+  st.style.color = getMsgColor(Math.round(pct));
 
   const resta = Math.max(0, vt - vl);
   document.getElementById('tl').textContent = vl.toLocaleString('es');
@@ -465,6 +805,16 @@ function calc() {
 document.getElementById('vl').addEventListener('input', calc);
 document.getElementById('vt').addEventListener('input', calc);
 
+function reset() {
+  document.getElementById('vl').value = '';
+  document.getElementById('vt').value = '';
+  confettiDone = false;
+  calc();
+  document.getElementById('vl').focus();
+}
+
+document.getElementById('btnReset').addEventListener('click', reset);
+
 /* ── CONFETTI ── */
 const cv = document.getElementById('ccc');
 const cx = cv.getContext('2d');
@@ -473,14 +823,12 @@ let parts = [], running = false;
 function resize() { cv.width = innerWidth; cv.height = innerHeight; }
 resize(); addEventListener('resize', resize);
 
-const COLS = ['#ff6b6b','#ffb347','#c3b1e1','#a8e6cf','#f9ca24','#6bcff6','#ff9ff3','#ff6eb7'];
-
 function mkPart() {
   return {
     x: Math.random() * cv.width,
     y: -20,
     r: Math.random() * 9 + 4,
-    col: COLS[Math.floor(Math.random() * COLS.length)],
+    col: confettiCols[Math.floor(Math.random() * confettiCols.length)],
     vx: (Math.random() - 0.5) * 5,
     vy: Math.random() * 3 + 2,
     ang: Math.random() * 360,
@@ -520,6 +868,8 @@ function boom() {
   for (let i = 0; i < 140; i++) setTimeout(() => parts.push(mkPart()), i * 18);
   loop();
 }
+
+initThemes();
 </script>
 </body>
 </html>
