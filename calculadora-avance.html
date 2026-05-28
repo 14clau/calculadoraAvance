@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✨ Calculadora de Avance para Celia</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(145deg, #ffecd2 0%, #fcb69f 35%, #e8c5e5 70%, #c3b1e1 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Nunito', sans-serif;
+  padding: 2rem;
+}
+
+.card {
+  background: rgba(255,255,255,0.93);
+  border-radius: 36px;
+  padding: 2.8rem 3rem;
+  max-width: 540px;
+  width: 100%;
+  box-shadow:
+    0 40px 100px rgba(200,90,80,0.22),
+    0 0 0 1.5px rgba(255,255,255,0.7);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -60px;
+  width: 260px; height: 260px;
+  background: radial-gradient(circle, rgba(255,183,77,0.18) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.card::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: -40px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(195,177,225,0.22) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+h1 {
+  font-family: 'Pacifico', cursive;
+  font-size: 2rem;
+  color: #ff6b6b;
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #bbb;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-top: 0.3rem;
+  margin-bottom: 2rem;
+  letter-spacing: 0.5px;
+}
+
+/* ── RING ── */
+.ring-container {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 1.8rem;
+  position: relative;
+}
+
+.ring-svg {
+  transform: rotate(-90deg);
+  transition: filter 0.5s ease;
+  filter: drop-shadow(0 6px 24px rgba(255,107,107,0.28));
+}
+
+.ring-bg { fill: none; stroke: #f2f2f2; stroke-width: 16; }
+
+.ring-progress {
+  fill: none;
+  stroke: #ff6b6b;
+  stroke-width: 16;
+  stroke-linecap: round;
+  stroke-dasharray: 565.5;
+  stroke-dashoffset: 565.5;
+  transition: stroke-dashoffset 0.65s cubic-bezier(0.4,0,0.2,1), stroke 0.5s ease;
+}
+
+.ring-text {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+  width: 130px;
+}
+
+.pct-num {
+  font-size: 3.2rem;
+  font-weight: 900;
+  color: #ff6b6b;
+  line-height: 1;
+  transition: color 0.5s ease;
+  font-family: 'Nunito', sans-serif;
+}
+
+.pct-lbl {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #ccc;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* ── INPUTS ── */
+.inputs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #bbb;
+  margin-bottom: 0.45rem;
+}
+
+.input-group input {
+  border: 2px solid #f0f0f0;
+  border-radius: 18px;
+  padding: 0.75rem 1rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #333;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.25s;
+  background: #fafafa;
+  width: 100%;
+  -moz-appearance: textfield;
+}
+.input-group input::-webkit-inner-spin-button { display: none; }
+.input-group input:focus {
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 5px rgba(255,107,107,0.1);
+  background: #fff;
+}
+
+/* ── BAR ── */
+.bar-wrap {
+  background: #f0f0f0;
+  border-radius: 100px;
+  height: 10px;
+  overflow: hidden;
+  margin: 0.8rem 0 1rem;
+  position: relative;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 100px;
+  background: linear-gradient(90deg, #ff6b6b, #ffb347);
+  width: 0%;
+  transition: width 0.65s cubic-bezier(0.4,0,0.2,1), background 0.5s;
+  position: relative;
+}
+.bar-fill::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 0;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: inherit;
+  box-shadow: 0 0 0 4px rgba(255,107,107,0.2);
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+.bar-fill.show-dot::after { opacity: 1; }
+
+/* ── STATUS ── */
+.status-box {
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ddd;
+  min-height: 1.8rem;
+  margin-bottom: 1.3rem;
+  transition: all 0.4s ease;
+  line-height: 1.4;
+}
+
+/* ── FORMULA ── */
+.formula-box {
+  background: linear-gradient(135deg, #fff9f0 0%, #fff0f5 100%);
+  border-radius: 20px;
+  padding: 1.1rem 1.4rem;
+  border: 1.5px solid rgba(255,107,107,0.12);
+  margin-bottom: 1.2rem;
+  text-align: center;
+}
+.formula-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #d4a0a0;
+  margin-bottom: 0.4rem;
+}
+.formula-eq {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #ff6b6b;
+}
+.formula-eq span { color: #ffb347; }
+
+/* ── RESULT TABLE ── */
+.result-card {
+  background: #fafafa;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1.5px solid #f0f0f0;
+  display: none;
+}
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 1.2rem;
+  font-size: 0.9rem;
+}
+.result-row + .result-row { border-top: 1px dashed #efefef; }
+.result-row .lbl { color: #aaa; font-weight: 700; }
+.result-row .val { font-weight: 900; color: #333; font-size: 0.95rem; }
+.result-row.highlight .val { color: #ff6b6b; font-size: 1.1rem; }
+
+/* ── CONFETTI CANVAS ── */
+#ccc {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── EMOJI BADGE ── */
+.emoji-badge {
+  position: absolute;
+  top: 1.5rem; right: 1.8rem;
+  font-size: 1.4rem;
+  animation: float 3s ease-in-out infinite;
+}
+.emoji-badge2 {
+  position: absolute;
+  top: 1.5rem; left: 1.8rem;
+  font-size: 1.4rem;
+  animation: float 3.4s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+.pop { animation: pop 0.4s ease; }
+</style>
+</head>
+<body>
+
+<canvas id="ccc"></canvas>
+
+<div class="card" id="mainCard">
+  <div class="emoji-badge">🌸</div>
+  <div class="emoji-badge2">⭐</div>
+
+  <h1>% de Avance</h1>
+  <p class="subtitle">Calculá cuánto has avanzado</p>
+
+  <!-- Ring -->
+  <div class="ring-container">
+    <svg class="ring-svg" id="ringSvg" width="210" height="210" viewBox="0 0 200 200" aria-hidden="true">
+      <defs>
+        <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ff6b6b"/>
+          <stop offset="50%" stop-color="#ffb347"/>
+          <stop offset="100%" stop-color="#c3b1e1"/>
+        </linearGradient>
+      </defs>
+      <circle class="ring-bg" cx="100" cy="100" r="90"/>
+      <circle class="ring-progress" id="rp" cx="100" cy="100" r="90"/>
+    </svg>
+    <div class="ring-text">
+      <div class="pct-num" id="pd">0%</div>
+      <div class="pct-lbl">avance</div>
+    </div>
+  </div>
+
+  <!-- Inputs -->
+  <div class="inputs-grid">
+    <div class="input-group">
+      <label>✅ Valor logrado</label>
+      <input type="number" id="vl" placeholder="Ej: 75" min="0" step="any"/>
+    </div>
+    <div class="input-group">
+      <label>🎯 Valor total</label>
+      <input type="number" id="vt" placeholder="Ej: 100" min="0.001" step="any"/>
+    </div>
+  </div>
+
+  <!-- Bar -->
+  <div class="bar-wrap">
+    <div class="bar-fill" id="bf"></div>
+  </div>
+
+  <!-- Status -->
+  <div class="status-box" id="st">Ingresá los valores para calcular 💫</div>
+
+  <!-- Formula -->
+  <div class="formula-box">
+    <div class="formula-label">Fórmula</div>
+    <div class="formula-eq">
+      % Avance = <span>(Logrado ÷ Total)</span> × 100
+    </div>
+  </div>
+
+  <!-- Result Card -->
+  <div class="result-card" id="rc">
+    <div class="result-row">
+      <span class="lbl">Valor logrado</span>
+      <span class="val" id="tl">—</span>
+    </div>
+    <div class="result-row">
+      <span class="lbl">Valor total</span>
+      <span class="val" id="tt">—</span>
+    </div>
+    <div class="result-row highlight">
+      <span class="lbl">Porcentaje de avance</span>
+      <span class="val" id="tp">—</span>
+    </div>
+    <div class="result-row">
+      <span class="lbl">Resta para completar</span>
+      <span class="val" id="tr">—</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const CIRC = 2 * Math.PI * 90;
+const rp = document.getElementById('rp');
+const pd = document.getElementById('pd');
+const bf = document.getElementById('bf');
+const st = document.getElementById('st');
+const rc = document.getElementById('rc');
+
+rp.style.strokeDasharray = CIRC;
+rp.style.strokeDashoffset = CIRC;
+
+const MSGS = [
+  { max: 0,   text: 'Ingresa los valores para calcular ', color: '#ccc' },
+  { max: 10,  text: '¡Primer paso dado! 🌱',               color: '#ff6b6b' },
+  { max: 25,  text: '¡Empezando con fuerza! 💪',           color: '#ff8c6b' },
+  { max: 40,  text: '¡Buen ritmo, sigue adelante! 🚀',     color: '#ffb347' },
+  { max: 50,  text: '¡Ya vas por la mitad! 🌟',            color: '#f9ca24' },
+  { max: 65,  text: '¡Más de la mitad, genial! ✨',        color: '#a8e6cf' },
+  { max: 75,  text: '¡Tres cuartos del camino! 🔥',        color: '#6bcff6' },
+  { max: 90,  text: '¡Casi llegas, no pares ahora! ⚡',          color: '#c3b1e1' },
+  { max: 99,  text: '¡Falta poquísimo! ¡Ya casi! 💎',     color: '#ff9ff3' },
+  { max: 100, text: '¡META CUMPLIDA! 🎉🎊🏆',             color: '#2ecc71' },
+  { max: Infinity, text: '¡Has superado la meta! 🏆🌈',      color: '#2ecc71' },
+];
+
+function getColor(p) {
+  if (p <= 25)  return '#ff6b6b';
+  if (p <= 50)  return '#ffb347';
+  if (p <= 75)  return '#f9ca24';
+  if (p < 100)  return '#6bcff6';
+  return '#2ecc71';
+}
+
+function getMsg(p) {
+  for (const m of MSGS) if (p <= m.max) return m;
+  return MSGS[MSGS.length - 1];
+}
+
+let raf = null, cur = 0;
+
+function animTo(target) {
+  cancelAnimationFrame(raf);
+  const from = cur, dur = 650, t0 = performance.now();
+  function step(now) {
+    const t = Math.min((now - t0) / dur, 1);
+    const e = 1 - Math.pow(1 - t, 4);
+    cur = from + (target - from) * e;
+    const clamped = Math.min(cur, 100);
+    rp.style.strokeDashoffset = CIRC * (1 - clamped / 100);
+    pd.textContent = Math.round(cur) + '%';
+    bf.style.width = clamped + '%';
+    const c = getColor(cur);
+    pd.style.color = c;
+    rp.style.stroke = c;
+    bf.style.background = `linear-gradient(90deg, #ff6b6b, ${c})`;
+    bf.classList.toggle('show-dot', clamped > 2);
+    if (t < 1) raf = requestAnimationFrame(step);
+  }
+  raf = requestAnimationFrame(step);
+}
+
+let confettiDone = false;
+
+function calc() {
+  const vl = parseFloat(document.getElementById('vl').value);
+  const vt = parseFloat(document.getElementById('vt').value);
+
+  if (isNaN(vl) || isNaN(vt) || vt <= 0) {
+    animTo(0);
+    st.textContent = (!isNaN(vt) && vt <= 0) ? 'El valor total debe ser mayor a 0 ⚠️' : 'Ingresá los valores para calcular 💫';
+    st.style.color = '#ccc';
+    rc.style.display = 'none';
+    confettiDone = false;
+    return;
+  }
+
+  const pct = (vl / vt) * 100;
+  animTo(pct);
+
+  const m = getMsg(Math.round(pct));
+  st.textContent = m.text;
+  st.style.color = m.color;
+
+  const resta = Math.max(0, vt - vl);
+  document.getElementById('tl').textContent = vl.toLocaleString('es');
+  document.getElementById('tt').textContent = vt.toLocaleString('es');
+  document.getElementById('tp').textContent = pct.toFixed(2) + '%';
+  document.getElementById('tp').style.color = getColor(pct);
+  document.getElementById('tr').textContent = resta.toLocaleString('es');
+  rc.style.display = 'block';
+
+  if (pct >= 100 && !confettiDone) {
+    confettiDone = true;
+    boom();
+    const c = document.getElementById('mainCard');
+    c.style.animation = 'pop 0.45s ease';
+    setTimeout(() => c.style.animation = '', 450);
+  }
+  if (pct < 100) confettiDone = false;
+}
+
+document.getElementById('vl').addEventListener('input', calc);
+document.getElementById('vt').addEventListener('input', calc);
+
+/* ── CONFETTI ── */
+const cv = document.getElementById('ccc');
+const cx = cv.getContext('2d');
+let parts = [], running = false;
+
+function resize() { cv.width = innerWidth; cv.height = innerHeight; }
+resize(); addEventListener('resize', resize);
+
+const COLS = ['#ff6b6b','#ffb347','#c3b1e1','#a8e6cf','#f9ca24','#6bcff6','#ff9ff3','#ff6eb7'];
+
+function mkPart() {
+  return {
+    x: Math.random() * cv.width,
+    y: -20,
+    r: Math.random() * 9 + 4,
+    col: COLS[Math.floor(Math.random() * COLS.length)],
+    vx: (Math.random() - 0.5) * 5,
+    vy: Math.random() * 3 + 2,
+    ang: Math.random() * 360,
+    spin: (Math.random() - 0.5) * 12,
+    shape: Math.random() > 0.5 ? 'rect' : 'circle',
+    op: 1
+  };
+}
+
+function drawP(p) {
+  cx.save();
+  cx.globalAlpha = p.op;
+  cx.fillStyle = p.col;
+  cx.translate(p.x, p.y);
+  cx.rotate(p.ang * Math.PI / 180);
+  if (p.shape === 'rect') cx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 1.6);
+  else { cx.beginPath(); cx.arc(0, 0, p.r / 2, 0, Math.PI * 2); cx.fill(); }
+  cx.restore();
+}
+
+function loop() {
+  if (!running) return;
+  cx.clearRect(0, 0, cv.width, cv.height);
+  parts.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.ang += p.spin; p.vy += 0.12;
+    if (p.y > cv.height * 0.75) p.op -= 0.025;
+    drawP(p);
+  });
+  parts = parts.filter(p => p.op > 0);
+  if (parts.length === 0) { running = false; cx.clearRect(0, 0, cv.width, cv.height); }
+  else requestAnimationFrame(loop);
+}
+
+function boom() {
+  if (running) return;
+  running = true; parts = [];
+  for (let i = 0; i < 140; i++) setTimeout(() => parts.push(mkPart()), i * 18);
+  loop();
+}
+</script>
+</body>
+</html>
