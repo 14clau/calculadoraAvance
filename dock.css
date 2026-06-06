@@ -5,8 +5,8 @@
   --dock-border: rgba(255, 255, 255, 0.1);
   --dock-text: #e8e6e3;
   --dock-muted: #8a8898;
-  --dock-accent: #7c6cf0;
-  --dock-accent-glow: rgba(124, 108, 240, 0.35);
+  --dock-accent: var(--accent); 
+  --dock-accent-glow: rgba(var(--accent-rgb), 0.35);
   position: fixed;
   left: 1.25rem;
   bottom: 1.25rem;
