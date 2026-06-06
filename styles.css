@@ -1,5 +1,11 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+
 :root {
   --page-bg: linear-gradient(145deg, #ffecd2 0%, #fcb69f 35%, #e8c5e5 70%, #c3b1e1 100%);
   --accent: #ff6b6b;
@@ -18,12 +24,17 @@
 
 body {
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--page-bg);
+  background-attachment: fixed;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   padding: 1.25rem;
+  padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  overflow-x: hidden;
+  width: 100%;
   transition: background 0.5s ease;
 }
 
@@ -33,6 +44,8 @@ body {
   padding: 2rem 2.4rem;
   max-width: 540px;
   width: 100%;
+  flex-shrink: 0;
+  margin: auto;
   box-shadow:
     0 40px 100px var(--card-shadow),
     0 0 0 1.5px rgba(255,255,255,0.7);
@@ -74,15 +87,19 @@ body {
 }
 .tab-btn {
   flex: 1;
+  min-width: 0;
   border: none;
   border-radius: 13px;
   padding: 0.65rem 0.5rem;
-  font-family: 'Nunito', sans-serif;
+  font-family: inherit;
   font-size: 0.82rem;
   font-weight: 800;
   color: #aaa;
   background: transparent;
   cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 }
 .tab-btn:hover { color: #777; }
@@ -129,6 +146,9 @@ h1 {
 
 .ring-svg {
   display: block;
+  width: 168px;
+  height: 168px;
+  max-width: 100%;
   transform: rotate(-90deg);
   transition: filter 0.5s ease;
   filter: drop-shadow(0 6px 24px var(--ring-shadow));
@@ -187,6 +207,10 @@ h1 {
   margin-bottom: 0.75rem;
 }
 
+.input-group {
+  min-width: 0;
+}
+
 .input-group label {
   display: block;
   font-size: 0.72rem;
@@ -201,7 +225,7 @@ h1 {
   border: 2px solid #f0f0f0;
   border-radius: 16px;
   padding: 0.6rem 0.85rem;
-  font-family: 'Nunito', sans-serif;
+  font-family: inherit;
   font-size: 1.15rem;
   font-weight: 900;
   color: #333;
@@ -209,9 +233,17 @@ h1 {
   transition: border-color 0.2s, box-shadow 0.25s;
   background: #fafafa;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  -webkit-appearance: none;
   -moz-appearance: textfield;
+  appearance: textfield;
 }
-.input-group input::-webkit-inner-spin-button { display: none; }
+.input-group input::-webkit-outer-spin-button,
+.input-group input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 .input-group input:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 5px rgba(var(--accent-rgb), 0.1);
@@ -748,9 +780,32 @@ h1 {
 }
 
 @media (max-width: 480px) {
+  body {
+    padding: 1rem;
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .card {
+    padding: 1.5rem 1.25rem;
+    border-radius: 28px;
+  }
+
+  .tab-btn {
+    font-size: 0.72rem;
+    padding: 0.55rem 0.35rem;
+  }
+
+  .emoji-badge,
+  .emoji-badge2 {
+    top: 1rem;
+    font-size: 1.1rem;
+  }
+  .emoji-badge { right: 1.25rem; }
+  .emoji-badge2 { left: 1.25rem; }
+
   .dock {
     left: 0.75rem;
-    bottom: 0.75rem;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
   }
   .dock-nav-btn {
     width: 44px;
