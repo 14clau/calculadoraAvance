@@ -17,6 +17,79 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css?v=3">
   <link rel="stylesheet" href="./dock.css?v=1">
+  <script>
+    // Aplicar tema guardado ANTES del primer paint para evitar flash de colores
+    (function() {
+      var THEMES_QUICK = {
+        oceano: {
+          pageBg:'linear-gradient(145deg,#e0f7fa 0%,#b2ebf2 35%,#80cbc4 70%,#4db6ac 100%)',
+          accent:'#00897b',accent2:'#26c6da',accent3:'#4dd0e1',
+          accentRgb:'0, 137, 123',cardShadow:'rgba(0,105,92,0.2)',
+          blob1:'rgba(38,198,218,0.2)',blob2:'rgba(77,208,225,0.22)',
+          formulaBg:'linear-gradient(135deg,#e0f7fa 0%,#e8f5e9 100%)',
+          formulaBorder:'rgba(0,137,123,0.15)',formulaLabel:'#80cbc4',
+          ringShadow:'rgba(0,137,123,0.28)'
+        },
+        bosque: {
+          pageBg:'linear-gradient(145deg,#f1f8e9 0%,#dcedc8 35%,#a5d6a7 70%,#81c784 100%)',
+          accent:'#558b2f',accent2:'#9ccc65',accent3:'#aed581',
+          accentRgb:'85, 139, 47',cardShadow:'rgba(56,142,60,0.2)',
+          blob1:'rgba(156,204,101,0.22)',blob2:'rgba(129,199,132,0.25)',
+          formulaBg:'linear-gradient(135deg,#f1f8e9 0%,#e8f5e9 100%)',
+          formulaBorder:'rgba(85,139,47,0.15)',formulaLabel:'#a5d6a7',
+          ringShadow:'rgba(85,139,47,0.28)'
+        },
+        lavanda: {
+          pageBg:'linear-gradient(145deg,#f3e5f5 0%,#e1bee7 35%,#ce93d8 70%,#ba68c8 100%)',
+          accent:'#8e24aa',accent2:'#ba68c8',accent3:'#ce93d8',
+          accentRgb:'142, 36, 170',cardShadow:'rgba(106,27,154,0.2)',
+          blob1:'rgba(186,104,200,0.22)',blob2:'rgba(206,147,216,0.25)',
+          formulaBg:'linear-gradient(135deg,#fce4ec 0%,#f3e5f5 100%)',
+          formulaBorder:'rgba(142,36,170,0.15)',formulaLabel:'#ce93d8',
+          ringShadow:'rgba(142,36,170,0.28)'
+        },
+        cereza: {
+          pageBg:'linear-gradient(145deg,#fce4ec 0%,#f8bbd9 35%,#f48fb1 70%,#f06292 100%)',
+          accent:'#e91e63',accent2:'#f48fb1',accent3:'#f8bbd9',
+          accentRgb:'233, 30, 99',cardShadow:'rgba(194,24,91,0.2)',
+          blob1:'rgba(244,143,177,0.25)',blob2:'rgba(248,187,217,0.3)',
+          formulaBg:'linear-gradient(135deg,#fff0f5 0%,#fce4ec 100%)',
+          formulaBorder:'rgba(233,30,99,0.15)',formulaLabel:'#f48fb1',
+          ringShadow:'rgba(233,30,99,0.28)'
+        },
+        noche: {
+          dark:true,
+          pageBg:'linear-gradient(160deg,#0f0e0d 0%,#161412 50%,#1c1a18 100%)',
+          accent:'#c9a87c',accent2:'#8fa89a',accent3:'#7a8fa8',
+          accentRgb:'201, 168, 124',cardShadow:'rgba(0,0,0,0.55)',
+          blob1:'rgba(201,168,124,0.05)',blob2:'rgba(122,143,168,0.04)',
+          formulaBg:'linear-gradient(135deg,#1a1816 0%,#22201e 100%)',
+          formulaBorder:'rgba(201,168,124,0.12)',formulaLabel:'#7a7670',
+          ringShadow:'rgba(201,168,124,0.12)'
+        }
+      };
+      try {
+        var saved = localStorage.getItem('calcAvanceTheme');
+        if (saved && saved !== 'atardecer' && THEMES_QUICK[saved]) {
+          var t = THEMES_QUICK[saved];
+          var r = document.documentElement;
+          r.style.setProperty('--page-bg', t.pageBg);
+          r.style.setProperty('--accent', t.accent);
+          r.style.setProperty('--accent2', t.accent2);
+          r.style.setProperty('--accent3', t.accent3);
+          r.style.setProperty('--accent-rgb', t.accentRgb);
+          r.style.setProperty('--card-shadow', t.cardShadow);
+          r.style.setProperty('--blob1', t.blob1);
+          r.style.setProperty('--blob2', t.blob2);
+          r.style.setProperty('--formula-bg', t.formulaBg);
+          r.style.setProperty('--formula-border', t.formulaBorder);
+          r.style.setProperty('--formula-label', t.formulaLabel);
+          r.style.setProperty('--ring-shadow', t.ringShadow);
+          if (t.dark) r.classList.add('theme-dark');
+        }
+      } catch(e) {}
+    })();
+  </script>
 </head>
 <body>
 
