@@ -530,3 +530,230 @@ h1 {
 .theme-dark .theme-name {
   color: #b0aca4;
 }
+
+/* ── DOCK FLOTANTE ── */
+.dock {
+  --dock-bg: rgba(22, 24, 32, 0.92);
+  --dock-surface: rgba(255, 255, 255, 0.06);
+  --dock-border: rgba(255, 255, 255, 0.1);
+  --dock-text: #e8e6e3;
+  --dock-muted: #8a8898;
+  --dock-accent: #7c6cf0;
+  --dock-accent-glow: rgba(124, 108, 240, 0.35);
+  position: fixed;
+  left: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 8000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-family: 'Nunito', sans-serif;
+}
+
+.dock-panel {
+  width: min(320px, calc(100vw - 2.5rem));
+  background: var(--dock-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--dock-border);
+  border-radius: 18px;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+  animation: dock-in 0.2s ease;
+}
+
+@keyframes dock-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dock-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--dock-border);
+}
+
+.dock-panel-icon {
+  color: var(--dock-accent);
+  flex-shrink: 0;
+}
+
+.dock-panel-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--dock-text);
+  letter-spacing: -0.01em;
+}
+
+.dock-task-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-height: 220px;
+  overflow-y: auto;
+  margin-bottom: 0.75rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dock-muted) transparent;
+}
+
+.dock-task-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--dock-surface);
+  border: 1px solid var(--dock-border);
+  border-radius: 12px;
+  padding: 0.45rem 0.55rem;
+}
+
+.dock-task-check {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--dock-accent);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.dock-task-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--dock-text);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  outline: none;
+}
+
+.dock-task-input::placeholder {
+  color: var(--dock-muted);
+}
+
+.dock-task-item.done .dock-task-input {
+  text-decoration: line-through;
+  color: var(--dock-muted);
+}
+
+.dock-task-del {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--dock-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.dock-task-del:hover {
+  background: rgba(255, 80, 80, 0.15);
+  color: #ff6b6b;
+}
+
+.dock-add-btn {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--dock-text);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 800;
+  padding: 0.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.dock-add-btn:hover {
+  background: var(--dock-surface);
+}
+
+.dock-notes {
+  width: 100%;
+  min-height: 140px;
+  resize: vertical;
+  border: 1px solid var(--dock-border);
+  border-radius: 12px;
+  background: var(--dock-surface);
+  color: var(--dock-text);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.5;
+  padding: 0.75rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.dock-notes::placeholder {
+  color: var(--dock-muted);
+}
+
+.dock-notes:focus {
+  border-color: var(--dock-accent);
+  box-shadow: 0 0 0 3px var(--dock-accent-glow);
+}
+
+.dock-nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.dock-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--dock-border);
+  border-radius: 14px;
+  background: var(--dock-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  color: var(--dock-muted);
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+.dock-nav-btn:hover {
+  color: var(--dock-text);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.dock-nav-btn.active {
+  background: var(--dock-accent);
+  border-color: var(--dock-accent);
+  color: #fff;
+  box-shadow: 0 8px 28px var(--dock-accent-glow);
+}
+
+.dock-nav-btn:active {
+  transform: scale(0.94);
+}
+
+.dock-nav-btn:focus-visible {
+  outline: 2px solid var(--dock-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .dock {
+    left: 0.75rem;
+    bottom: 0.75rem;
+  }
+  .dock-nav-btn {
+    width: 44px;
+    height: 44px;
+  }
+}

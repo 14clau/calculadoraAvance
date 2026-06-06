@@ -97,6 +97,48 @@
   </div>
 </div>
 
+<aside class="dock" id="dock" aria-label="Herramientas">
+  <div class="dock-panel" id="dockPanelTasks" hidden>
+    <header class="dock-panel-header">
+      <svg class="dock-panel-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+      </svg>
+      <h2 class="dock-panel-title">Tareas</h2>
+    </header>
+    <ul class="dock-task-list" id="dockTaskList"></ul>
+    <button type="button" class="dock-add-btn" id="dockAddTask">+ Añadir tarea</button>
+  </div>
+
+  <div class="dock-panel" id="dockPanelNotes" hidden>
+    <header class="dock-panel-header">
+      <svg class="dock-panel-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+      <h2 class="dock-panel-title">Notas</h2>
+    </header>
+    <textarea class="dock-notes" id="dockNotes" placeholder="Escribe lo que necesites recordar…" rows="6"></textarea>
+  </div>
+
+  <nav class="dock-nav" aria-label="Barra de herramientas">
+    <button type="button" class="dock-nav-btn" data-dock="tasks" aria-label="Tareas">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+      </svg>
+    </button>
+    <button type="button" class="dock-nav-btn" data-dock="music" aria-label="Sonido" aria-pressed="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+      </svg>
+    </button>
+    <button type="button" class="dock-nav-btn" data-dock="notes" aria-label="Notas">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+    </button>
+  </nav>
+</aside>
+
 <script src="app.js"></script>
+<script src="widget.js"></script>
 </body>
 </html>
