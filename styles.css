@@ -23,14 +23,14 @@ body {
   align-items: center;
   justify-content: center;
   font-family: 'Nunito', sans-serif;
-  padding: 2rem;
+  padding: 1.25rem;
   transition: background 0.5s ease;
 }
 
 .card {
   background: rgba(255,255,255,0.93);
   border-radius: 36px;
-  padding: 2.8rem 3rem;
+  padding: 2rem 2.4rem;
   max-width: 540px;
   width: 100%;
   box-shadow:
@@ -100,7 +100,7 @@ body {
 
 h1 {
   font-family: 'Nunito', sans-serif;
-  font-size: 1.85rem;
+  font-size: 1.55rem;
   font-weight: 900;
   color: var(--accent);
   text-align: center;
@@ -112,22 +112,23 @@ h1 {
 .subtitle {
   text-align: center;
   color: #bbb;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  margin-top: 0.3rem;
-  margin-bottom: 2rem;
+  margin-top: 0.2rem;
+  margin-bottom: 1rem;
   letter-spacing: 0.5px;
 }
 
 /* ── RING ── */
 .ring-container {
-  display: flex;
-  justify-content: center;
-  margin: 0 0 1.8rem;
+  width: 168px;
+  height: 168px;
+  margin: 0 auto 1rem;
   position: relative;
 }
 
 .ring-svg {
+  display: block;
   transform: rotate(-90deg);
   transition: filter 0.5s ease;
   filter: drop-shadow(0 6px 24px var(--ring-shadow));
@@ -147,20 +148,25 @@ h1 {
 
 .ring-text {
   position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
-  width: 130px;
 }
 
 .pct-num {
-  font-size: 3.2rem;
+  font-size: 2.5rem;
   font-weight: 900;
   color: var(--accent);
   line-height: 1;
-  transition: color 0.5s ease;
+  transition: color 0.5s ease, font-size 0.3s ease;
   font-family: 'Nunito', sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.pct-num.over {
+  font-size: 2rem;
 }
 
 .pct-lbl {
@@ -169,15 +175,16 @@ h1 {
   color: #ccc;
   letter-spacing: 3px;
   text-transform: uppercase;
-  margin-top: 2px;
+  margin-top: 4px;
+  padding-left: 3px;
 }
 
 /* ── INPUTS ── */
 .inputs-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1.2rem;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
 .input-group label {
@@ -192,10 +199,10 @@ h1 {
 
 .input-group input {
   border: 2px solid #f0f0f0;
-  border-radius: 18px;
-  padding: 0.75rem 1rem;
+  border-radius: 16px;
+  padding: 0.6rem 0.85rem;
   font-family: 'Nunito', sans-serif;
-  font-size: 1.3rem;
+  font-size: 1.15rem;
   font-weight: 900;
   color: #333;
   outline: none;
@@ -215,17 +222,17 @@ h1 {
 .bar-wrap {
   background: #f0f0f0;
   border-radius: 100px;
-  height: 10px;
+  height: 8px;
   overflow: hidden;
-  margin: 0.8rem 0 1rem;
+  margin: 0.4rem 0 0.6rem;
   position: relative;
 }
 .bar-fill {
   height: 100%;
   border-radius: 100px;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  background: var(--accent);
   width: 0%;
-  transition: width 0.65s cubic-bezier(0.4,0,0.2,1), background 0.5s;
+  transition: width 0.65s cubic-bezier(0.4,0,0.2,1), background-color 0.5s;
   position: relative;
 }
 .bar-fill::after {
@@ -244,61 +251,71 @@ h1 {
 /* ── STATUS ── */
 .status-box {
   text-align: center;
-  font-size: 1.05rem;
+  font-size: 0.92rem;
   font-weight: 800;
   color: #ddd;
-  min-height: 1.8rem;
-  margin-bottom: 1.3rem;
+  min-height: 1.4rem;
+  margin-bottom: 0.75rem;
   transition: all 0.4s ease;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 /* ── FORMULA ── */
 .formula-box {
   background: var(--formula-bg);
-  border-radius: 20px;
-  padding: 1.1rem 1.4rem;
+  border-radius: 14px;
+  padding: 0.55rem 1rem;
   border: 1.5px solid var(--formula-border);
-  margin-bottom: 1.2rem;
+  margin-bottom: 0.75rem;
   text-align: center;
   transition: background 0.4s ease, border-color 0.4s ease;
 }
 .formula-label {
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--formula-label);
-  margin-bottom: 0.4rem;
-  transition: color 0.4s ease;
+  display: none;
 }
 .formula-eq {
-  font-size: 1rem;
+  font-size: 0.82rem;
   font-weight: 800;
   color: var(--accent);
   transition: color 0.4s ease;
 }
 .formula-eq span { color: var(--accent2); transition: color 0.4s ease; }
 
-/* ── RESULT TABLE ── */
+/* ── RESULT GRID ── */
 .result-card {
-  background: #fafafa;
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1.5px solid #f0f0f0;
   display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+  background: #fafafa;
+  border-radius: 16px;
+  padding: 0.5rem;
+  border: 1.5px solid #f0f0f0;
 }
-.result-row {
+.result-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.7rem 1.2rem;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.4rem 0.55rem;
+  background: #fff;
+  border-radius: 10px;
+}
+.result-item .lbl {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #bbb;
+}
+.result-item .val {
+  font-weight: 900;
+  color: #333;
   font-size: 0.9rem;
 }
-.result-row + .result-row { border-top: 1px dashed #efefef; }
-.result-row .lbl { color: #aaa; font-weight: 700; }
-.result-row .val { font-weight: 900; color: #333; font-size: 0.95rem; }
-.result-row.highlight .val { color: var(--accent); font-size: 1.1rem; transition: color 0.4s ease; }
+.result-item.highlight .val {
+  color: var(--accent);
+  font-size: 0.95rem;
+  transition: color 0.4s ease;
+}
 
 /* ── CONFETTI CANVAS ── */
 #ccc {
@@ -339,8 +356,8 @@ h1 {
 .btn-reset {
   display: block;
   width: 100%;
-  margin-top: 1.4rem;
-  padding: 0.85rem 1.2rem;
+  margin-top: 0.85rem;
+  padding: 0.7rem 1rem;
   border: none;
   border-radius: 18px;
   font-family: 'Nunito', sans-serif;
@@ -418,3 +435,98 @@ h1 {
   color: #444;
 }
 .theme-option.selected .theme-name { color: var(--accent); }
+
+/* ── MODO NOCHE ── */
+.theme-dark .card {
+  background: rgba(30, 28, 26, 0.96);
+  box-shadow:
+    0 40px 100px var(--card-shadow),
+    0 0 0 1.5px rgba(255, 255, 255, 0.04);
+}
+
+.theme-dark .tabs {
+  background: #1a1816;
+}
+
+.theme-dark .tab-btn {
+  color: #6a6660;
+}
+.theme-dark .tab-btn:hover {
+  color: #9a9690;
+}
+.theme-dark .tab-btn.active {
+  background: #2a2826;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.theme-dark .subtitle,
+.theme-dark .input-group label,
+.theme-dark .result-item .lbl,
+.theme-dark .pct-lbl {
+  color: #7a7670;
+}
+
+.theme-dark .theme-intro {
+  color: #7a7670;
+}
+
+.theme-dark .ring-bg {
+  stroke: #2e2c28;
+}
+
+.theme-dark .input-group input {
+  background: #1a1816;
+  border-color: #3a3834;
+  color: #d4d0c8;
+}
+.theme-dark .input-group input::placeholder {
+  color: #5a5650;
+}
+.theme-dark .input-group input:focus {
+  background: #22201e;
+  box-shadow: 0 0 0 5px rgba(var(--accent-rgb), 0.08);
+}
+
+.theme-dark .bar-wrap {
+  background: #2e2c28;
+}
+
+.theme-dark .status-box {
+  color: #5a5650;
+}
+
+.theme-dark .result-card {
+  background: #1a1816;
+  border-color: #2e2c28;
+}
+.theme-dark .result-item {
+  background: #22201e;
+}
+.theme-dark .result-item .val {
+  color: #d4d0c8;
+}
+
+.theme-dark .btn-reset {
+  background: #1a1816;
+  color: #8a8680;
+}
+.theme-dark .btn-reset:hover {
+  background: #22201e;
+  color: #b0aca4;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.theme-dark .theme-option {
+  background: #1a1816;
+  border-color: #2e2c28;
+}
+.theme-dark .theme-option:hover {
+  border-color: #3a3834;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+.theme-dark .theme-option.selected {
+  background: #22201e;
+}
+.theme-dark .theme-name {
+  color: #b0aca4;
+}

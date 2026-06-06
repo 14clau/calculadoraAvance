@@ -94,17 +94,19 @@ const THEMES = [
     id: 'noche',
     name: 'Noche en Salamanca',
     emoji: '🌙',
-    swatch: ['#1a1a2e', '#16213e', '#0f3460', '#533483'],
-    pageBg: 'linear-gradient(145deg, #1a1a2e 0%, #16213e 40%, #0f3460 75%, #533483 100%)',
-    accent: '#e94560', accent2: '#ff6b9d', accent3: '#a29bfe',
-    accentRgb: '233, 69, 96',
-    cardShadow: 'rgba(15, 52, 96, 0.45)',
-    blob1: 'rgba(233, 69, 96, 0.15)', blob2: 'rgba(162, 155, 254, 0.2)',
-    formulaBg: 'linear-gradient(135deg, #1f2940 0%, #2a1f3d 100%)',
-    formulaBorder: 'rgba(233, 69, 96, 0.2)', formulaLabel: '#a29bfe',
-    ringShadow: 'rgba(233, 69, 96, 0.35)',
-    progress: ['#e94560', '#ff6b9d', '#a29bfe', '#74b9ff'],
-    confetti: ['#e94560','#ff6b9d','#a29bfe','#74b9ff','#fd79a8','#ffeaa7','#55efc4','#dfe6e9']
+    dark: true,
+    swatch: ['#121110', '#1e1c1a', '#2a2826', '#c9a87c'],
+    pageBg: 'linear-gradient(160deg, #0f0e0d 0%, #161412 50%, #1c1a18 100%)',
+    accent: '#c9a87c', accent2: '#8fa89a', accent3: '#7a8fa8',
+    accentRgb: '201, 168, 124',
+    cardShadow: 'rgba(0, 0, 0, 0.55)',
+    blob1: 'rgba(201, 168, 124, 0.05)', blob2: 'rgba(122, 143, 168, 0.04)',
+    formulaBg: 'linear-gradient(135deg, #1a1816 0%, #22201e 100%)',
+    formulaBorder: 'rgba(201, 168, 124, 0.12)', formulaLabel: '#7a7670',
+    ringShadow: 'rgba(201, 168, 124, 0.12)',
+    progress: ['#a08060', '#8fa89a', '#7a8fa8', '#9ab0c8'],
+    success: '#6a9e7a',
+    confetti: ['#a08060','#8fa89a','#7a8fa8','#c9a87c','#6a9e7a','#9ab0c8','#8a8078','#5a5650']
   }
 ];
 
@@ -132,6 +134,7 @@ function applyTheme(theme) {
     rgStops[2].setAttribute('stop-color', theme.accent3);
   }
   confettiCols = [...theme.confetti];
+  document.documentElement.classList.toggle('theme-dark', !!theme.dark);
   document.querySelectorAll('.theme-option').forEach(el => {
     el.classList.toggle('selected', el.dataset.themeId === theme.id);
   });
@@ -176,7 +179,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 
 const MSGS = [
   { max: 0,   text: 'Ingresa los valores para calcular ', color: '#ccc' },
-  { max: 10,  text: '¡Primer paso dado! 🌱' },
+  { max: 10,  text: '¡Primer paso dado! Roma no se hizo en un día' },
   { max: 25,  text: '¡Empezando con fuerza! 💪' },
   { max: 40,  text: '¡Buen ritmo, sigue adelante chocho! 🚀' },
   { max: 50,  text: '¡Ya vas por la mitad! 🌟' },
@@ -185,7 +188,7 @@ const MSGS = [
   { max: 90,  text: '¡Casi llegas, no pares ahora! ⚡' },
   { max: 99,  text: '¡Falta poquísimo! ¡Ya casi! 💎' },
   { max: 100, text: '¡META CUMPLIDA! 🎉🎊🏆' },
-  { max: Infinity, text: '¡Has superado la meta! 🏆🌈' },
+  { max: Infinity, text: '¡Has superado la meta! 🏆 Eres una campeona' },
 ];
 
 function getColor(p) {
@@ -194,12 +197,16 @@ function getColor(p) {
   if (p <= 50)  return c[1];
   if (p <= 75)  return c[2];
   if (p < 100)  return c[3];
-  return '#2ecc71';
+  return currentTheme.success || '#2ecc71';
+}
+
+function getMutedColor() {
+  return currentTheme.dark ? '#6a6660' : '#ccc';
 }
 
 function getMsgColor(p) {
-  if (p <= 0) return '#ccc';
-  if (p >= 100) return '#2ecc71';
+  if (p <= 0) return getMutedColor();
+  if (p >= 100) return currentTheme.success || '#2ecc71';
   const c = currentTheme.progress;
   if (p <= 25) return c[0];
   if (p <= 50) return c[1];
@@ -223,13 +230,14 @@ function animTo(target) {
     cur = from + (target - from) * e;
     const clamped = Math.min(cur, 100);
     rp.style.strokeDashoffset = CIRC * (1 - clamped / 100);
-    pd.textContent = Math.round(cur) + '%';
+    pd.textContent = cur > 100 ? '100%+' : Math.round(cur) + '%';
+    pd.classList.toggle('over', cur > 100);
     bf.style.width = clamped + '%';
-    const c = getColor(cur);
+    const c = getColor(Math.min(cur, 100));
     pd.style.color = c;
     rp.style.stroke = c;
-    bf.style.background = `linear-gradient(90deg, ${currentTheme.accent}, ${c})`;
-    bf.classList.toggle('show-dot', clamped > 2);
+    bf.style.backgroundColor = c;
+    bf.classList.toggle('show-dot', clamped > 2 && clamped < 100);
     if (t < 1) raf = requestAnimationFrame(step);
   }
   raf = requestAnimationFrame(step);
@@ -244,7 +252,7 @@ function calc() {
   if (isNaN(vl) || isNaN(vt) || vt <= 0) {
     animTo(0);
     st.textContent = (!isNaN(vt) && vt <= 0) ? 'El valor total debe ser mayor a 0 ⚠️' : 'Ingresa los valores para calcular';
-    st.style.color = '#ccc';
+    st.style.color = getMutedColor();
     rc.style.display = 'none';
     confettiDone = false;
     return;
@@ -257,13 +265,19 @@ function calc() {
   st.textContent = m.text;
   st.style.color = getMsgColor(Math.round(pct));
 
-  const resta = Math.max(0, vt - vl);
+  const trLbl = document.getElementById('trl');
   document.getElementById('tl').textContent = vl.toLocaleString('es');
   document.getElementById('tt').textContent = vt.toLocaleString('es');
   document.getElementById('tp').textContent = pct.toFixed(2) + '%';
-  document.getElementById('tp').style.color = getColor(pct);
-  document.getElementById('tr').textContent = resta.toLocaleString('es');
-  rc.style.display = 'block';
+  document.getElementById('tp').style.color = getColor(Math.min(pct, 100));
+  if (vl > vt) {
+    trLbl.textContent = 'Exceso';
+    document.getElementById('tr').textContent = (vl - vt).toLocaleString('es');
+  } else {
+    trLbl.textContent = 'Resta';
+    document.getElementById('tr').textContent = (vt - vl).toLocaleString('es');
+  }
+  rc.style.display = 'grid';
 
   if (pct >= 100 && !confettiDone) {
     confettiDone = true;

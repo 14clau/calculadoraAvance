@@ -25,7 +25,7 @@
     <p class="subtitle">Calcula cuánto has avanzado en tus apuntes :D</p>
 
     <div class="ring-container">
-      <svg class="ring-svg" id="ringSvg" width="210" height="210" viewBox="0 0 200 200" aria-hidden="true">
+      <svg class="ring-svg" id="ringSvg" width="168" height="168" viewBox="0 0 200 200" aria-hidden="true">
         <defs>
           <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stop-color="#ff6b6b"/>
@@ -57,7 +57,7 @@
       <div class="bar-fill" id="bf"></div>
     </div>
 
-    <div class="status-box" id="st">Ingresa los valores para calcular 💫</div>
+    <div class="status-box" id="st">Ingresa los valores para calcular </div>
 
     <div class="formula-box">
       <div class="formula-label">Fórmula</div>
@@ -67,21 +67,21 @@
     </div>
 
     <div class="result-card" id="rc">
-      <div class="result-row">
-        <span class="lbl">Valor logrado</span>
+      <div class="result-item">
+        <span class="lbl">Logrado</span>
         <span class="val" id="tl">—</span>
       </div>
-      <div class="result-row">
-        <span class="lbl">Valor total</span>
+      <div class="result-item">
+        <span class="lbl">Total</span>
         <span class="val" id="tt">—</span>
       </div>
-      <div class="result-row highlight">
-        <span class="lbl">Porcentaje de avance</span>
-        <span class="val" id="tp">—</span>
-      </div>
-      <div class="result-row">
-        <span class="lbl">Resta para completar</span>
+      <div class="result-item">
+        <span class="lbl" id="trl">Resta</span>
         <span class="val" id="tr">—</span>
+      </div>
+      <div class="result-item highlight">
+        <span class="lbl">Avance</span>
+        <span class="val" id="tp">—</span>
       </div>
     </div>
 
