@@ -1,21 +1,124 @@
 (function () {
   const STORAGE_TASKS = 'calcAvanceTasks';
   const STORAGE_NOTES = 'calcAvanceNotes';
-  const STORAGE_MUSIC = 'calcAvanceMusic';
+  const STORAGE_SOUND = 'calcAvanceSound';
+  const STORAGE_SOUND_VOL = 'calcAvanceSoundVol';
 
   const dock = document.getElementById('dock');
   const panelTasks = document.getElementById('dockPanelTasks');
   const panelNotes = document.getElementById('dockPanelNotes');
+  const panelSounds = document.getElementById('dockPanelSounds');
   const taskList = document.getElementById('dockTaskList');
   const btnAddTask = document.getElementById('dockAddTask');
   const notesArea = document.getElementById('dockNotes');
   const navBtns = document.querySelectorAll('.dock-nav-btn');
+  const soundsGrid = document.getElementById('soundsGrid');
+  const volumeSlider = document.getElementById('soundsVolume');
+  const volumeVal = document.getElementById('soundsVolumeVal');
+  const volumeRow = document.getElementById('soundsVolumeRow');
 
   let tasks = [];
   let activePanel = null;
-  let musicOn = false;
   let saveNotesTimer = null;
 
+  /* ── AMBIENT SOUNDS SYSTEM ── */
+  const SOUNDS = [
+    { id: 'rain',          emoji: '🌧️', name: 'Lluvia',         file: 'lofirain.mp3' },
+    { id: 'ocean',         emoji: '🌊', name: 'Olas del mar',   file: 'olas.mp3' },
+    { id: 'darkacademia',  emoji: '📖', name: 'Dark Academia',  file: 'darkacademia.mp3' },
+    { id: 'fire',          emoji: '🔥', name: 'Chimenea',       file: 'chimenea.mp3' },
+    { id: 'relax',         emoji: '😎', name: 'Relax',          file: 'relax.mp3' },
+    { id: 'ambient',       emoji: '☁️', name: 'Ambient',        file: 'winterambient.mp3' },
+    { id: 'whitenoise',    emoji: '🤍', name: 'Ruido blanco',    file: 'blanco.mp3' },
+    { id: 'deephouse',     emoji: '🍸', name: 'Deep House',     file: 'deephouse.mp3' },
+    { id: 'jazz',          emoji: '🎷', name: 'Jazz',           file: 'jazz.mp3' }
+  ];
+
+  let currentAudio = null;      // Audio element currently playing
+  let currentSound = null;      // id of playing sound
+  let soundVolume = 50;
+
+  function playSound(id) {
+    stopSound();
+
+    const sound = SOUNDS.find(s => s.id === id);
+    if (!sound) return;
+
+    currentSound = id;
+    currentAudio = new Audio('sounds/' + sound.file);
+    currentAudio.loop = true;
+    currentAudio.volume = soundVolume / 100;
+    currentAudio.play().catch(e => console.warn('Audio play error', e));
+
+    updateSoundBtns();
+    volumeRow.hidden = false;
+    updateMusicBtn();
+    saveSound();
+  }
+
+  function stopSound() {
+    if (currentAudio) {
+      try {
+        currentAudio.pause();
+      } catch (_) {}
+      currentAudio = null;
+    }
+    currentSound = null;
+    updateSoundBtns();
+    volumeRow.hidden = true;
+    updateMusicBtn();
+    saveSound();
+  }
+
+  function updateSoundBtns() {
+    document.querySelectorAll('.sound-btn').forEach(btn => {
+      btn.classList.toggle('playing', btn.dataset.soundId === currentSound);
+    });
+  }
+
+  function updateMusicBtn() {
+    const btn = document.querySelector('[data-dock="music"]');
+    btn.classList.toggle('active', !!currentSound);
+    btn.setAttribute('aria-pressed', !!currentSound);
+  }
+
+  function saveSound() {
+    try {
+      if (currentSound) {
+        localStorage.setItem(STORAGE_SOUND, currentSound);
+      } else {
+        localStorage.removeItem(STORAGE_SOUND);
+      }
+    } catch (_) {}
+  }
+
+  function saveVolume() {
+    try { localStorage.setItem(STORAGE_SOUND_VOL, soundVolume); } catch (_) {}
+  }
+
+  function renderSounds() {
+    soundsGrid.innerHTML = '';
+    SOUNDS.forEach(s => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'sound-btn';
+      btn.dataset.soundId = s.id;
+      btn.setAttribute('aria-label', s.name);
+      btn.innerHTML = `
+        <span class="sound-btn-emoji">${s.emoji}</span>
+        <span class="sound-btn-label">${s.name}</span>`;
+      btn.addEventListener('click', () => {
+        if (currentSound === s.id) {
+          stopSound();
+        } else {
+          playSound(s.id);
+        }
+      });
+      soundsGrid.appendChild(btn);
+    });
+  }
+
+  /* ── TASKS ── */
   function uid() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
   }
@@ -33,10 +136,15 @@
       notesArea.value = localStorage.getItem(STORAGE_NOTES) || '';
     } catch (_) {}
 
+    // Load sound preferences
     try {
-      musicOn = localStorage.getItem(STORAGE_MUSIC) === 'true';
+      const vol = localStorage.getItem(STORAGE_SOUND_VOL);
+      if (vol !== null) soundVolume = parseInt(vol, 10) || 50;
     } catch (_) {}
+    volumeSlider.value = soundVolume;
+    volumeVal.textContent = soundVolume + '%';
 
+    renderSounds();
     updateMusicBtn();
     renderTasks();
   }
@@ -49,16 +157,14 @@
     try { localStorage.setItem(STORAGE_NOTES, notesArea.value); } catch (_) {}
   }
 
-  function saveMusic() {
-    try { localStorage.setItem(STORAGE_MUSIC, musicOn ? 'true' : 'false'); } catch (_) {}
-  }
-
+  /* ── PANELS ── */
   function closePanels() {
     activePanel = null;
     panelTasks.hidden = true;
     panelNotes.hidden = true;
+    panelSounds.hidden = true;
     navBtns.forEach(b => {
-      if (b.dataset.dock !== 'music') b.classList.remove('active');
+      if (b.dataset.dock !== 'music' || !currentSound) b.classList.remove('active');
     });
   }
 
@@ -74,21 +180,20 @@
       panelNotes.hidden = false;
       document.querySelector('[data-dock="notes"]').classList.add('active');
       notesArea.focus();
+    } else if (name === 'music') {
+      panelSounds.hidden = false;
+      document.querySelector('[data-dock="music"]').classList.add('active');
     }
   }
 
   function togglePanel(name) {
     if (activePanel === name) {
       closePanels();
+      // Keep music button active if sound is playing
+      if (currentSound) updateMusicBtn();
     } else {
       openPanel(name);
     }
-  }
-
-  function updateMusicBtn() {
-    const btn = document.querySelector('[data-dock="music"]');
-    btn.classList.toggle('active', musicOn);
-    btn.setAttribute('aria-pressed', musicOn);
   }
 
   function renderTasks() {
@@ -146,14 +251,13 @@
     if (last) last.focus();
   }
 
+  /* ── EVENT LISTENERS ── */
   navBtns.forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
       const type = btn.dataset.dock;
       if (type === 'music') {
-        musicOn = !musicOn;
-        saveMusic();
-        updateMusicBtn();
+        togglePanel('music');
         return;
       }
       togglePanel(type);
@@ -167,12 +271,22 @@
     saveNotesTimer = setTimeout(saveNotes, 300);
   });
 
+  volumeSlider.addEventListener('input', () => {
+    soundVolume = parseInt(volumeSlider.value, 10);
+    volumeVal.textContent = soundVolume + '%';
+    if (currentAudio) currentAudio.volume = soundVolume / 100;
+    saveVolume();
+  });
+
   document.addEventListener('click', e => {
     if (!dock.contains(e.target)) closePanels();
+    // Keep music button highlighted if sound playing
+    if (currentSound) updateMusicBtn();
   });
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closePanels();
+    if (currentSound) updateMusicBtn();
   });
 
   load();
